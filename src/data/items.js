@@ -78,6 +78,12 @@ export const CATEGORIES = [
       { id: 'hair-coupon', name: '헤어 쿠폰', point: 3500, itemId: 5150001 },
       { id: 'idol-hair-coupon', name: '아이돌 헤어 쿠폰', point: 6900, itemId: 5150038 },
       { id: 'royal-hair-coupon', name: '로얄 헤어 쿠폰', point: 7900, itemId: 5150040 },
+      {
+        id: 'special-royal-hair-coupon',
+        name: '스페셜 로얄 헤어 쿠폰',
+        point: 7900,
+        itemId: 5150044,
+      },
       { id: 'plastic-coupon', name: '성형 쿠폰', point: 2500, itemId: 5152024 },
       { id: 'skin-coupon', name: '스킨케어 쿠폰', point: 3000, itemId: 5153000 },
       { id: 'dye-coupon', name: '염색 쿠폰', point: 2000, itemId: 5151001 },
