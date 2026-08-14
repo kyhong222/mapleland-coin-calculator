@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "메이플랜드 캐시 아이템을 메소로 환산해주는 계산기",
+  "description": "메이플랜드 월드코인-메소 환전 계산기",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

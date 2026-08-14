@@ -19,7 +19,7 @@ export default function Header({ theme, onToggleTheme }) {
   return (
     <header className="topbar">
       <div className="wrap topbar-inner">
-        <h1>메이플랜드 캐시템 메소 환산기</h1>
+        <h1>메이플랜드 월드코인-메소 환전 계산기</h1>
         <button
           type="button"
           className="ghost-btn"
