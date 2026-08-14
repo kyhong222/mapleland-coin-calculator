@@ -1,17 +1,32 @@
+/* 테마 토글용 인라인 SVG (해/달) */
+function ThemeIcon({ dark }) {
+  return dark ? (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+    </svg>
+  );
+}
+
 export default function Header({ theme, onToggleTheme }) {
+  const dark = theme === 'dark';
   return (
     <header className="topbar">
       <div className="wrap topbar-inner">
-        <h1>
-          <span className="leaf">🍁</span> 메이플랜드 캐시템 메소 환산기
-        </h1>
+        <h1>메이플랜드 캐시템 메소 환산기</h1>
         <button
           type="button"
           className="ghost-btn"
           onClick={onToggleTheme}
-          aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+          aria-label={dark ? '라이트 모드로 전환' : '다크 모드로 전환'}
         >
-          {theme === 'dark' ? '☀️' : '🌙'}
+          <ThemeIcon dark={dark} />
         </button>
       </div>
     </header>

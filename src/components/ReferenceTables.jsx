@@ -1,7 +1,7 @@
 import { MAPLE_POINT_TABLE, RATES, WORLD_COIN_TABLE } from '../data/items.js';
 import { comma } from '../lib/format.js';
 
-export default function ReferenceTables({ rates, valid }) {
+export default function ReferenceTables({ rates, valid, voucherPoints }) {
   const mpp = valid ? comma(rates.mesoPerPoint) : '—';
 
   return (
@@ -70,7 +70,7 @@ export default function ReferenceTables({ rates, valid }) {
               <b>1 메이플포인트</b> = 700코인 × 7.5 ÷ 5,000P = <b>1.05원</b>
             </li>
             <li>
-              <b>1 메이플포인트</b> = 교환권 시세 ÷ 10,000 = <b>{mpp}메소</b>
+              <b>1 메이플포인트</b> = 교환권 시세 ÷ {comma(voucherPoints)} = <b>{mpp}메소</b>
             </li>
             <li>
               <b>아이템 메소가</b> = 아이템 포인트 × <span>{mpp}</span>

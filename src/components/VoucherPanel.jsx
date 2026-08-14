@@ -1,77 +1,80 @@
-import { useLayoutEffect, useRef } from 'react';
-import { PRESETS } from '../data/items.js';
-import { comma, digitsOnly, formatDigits, krw } from '../lib/format.js';
+import MesoInput from './MesoInput.jsx';
+import { VOUCHERS } from '../data/items.js';
+import { comma, krw } from '../lib/format.js';
 
-export default function VoucherPanel({ digits, onChangeDigits, voucherMeso, rates }) {
-  const inputRef = useRef(null);
-  const caretRef = useRef(null);
-  const display = formatDigits(digits);
-  const valid = voucherMeso > 0;
+export default function VoucherPanel({
+  prices,
+  onChangePrice,
+  voucherPoints,
+  onSelectVoucher,
+  rates,
+  valid,
+}) {
+  const rows = VOUCHERS.map((v) => {
+    const meso = Number(prices[v.points]) || 0;
+    return { ...v, meso, perPoint: meso > 0 ? meso / v.points : 0 };
+  });
 
-  // 콤마가 삽입/삭제돼도 커서가 같은 숫자 위치에 남도록 복원
-  useLayoutEffect(() => {
-    const el = inputRef.current;
-    if (!el || caretRef.current === null) return;
-    const target = caretRef.current;
-    caretRef.current = null;
-    let pos = 0;
-    let seen = 0;
-    while (pos < el.value.length && seen < target) {
-      if (el.value[pos] >= '0' && el.value[pos] <= '9') seen++;
-      pos++;
-    }
-    el.setSelectionRange(pos, pos);
-  }, [display]);
-
-  const handleChange = (e) => {
-    const el = e.target;
-    caretRef.current = digitsOnly(el.value.slice(0, el.selectionStart ?? 0)).length;
-    onChangeDigits(digitsOnly(el.value));
-  };
+  // 1P당 단가가 서로 다를 때만 최저가를 표시
+  const rated = rows.filter((r) => r.perPoint > 0).map((r) => r.perPoint);
+  const best = rated.length > 1 && new Set(rated).size > 1 ? Math.min(...rated) : null;
 
   return (
     <section className="panel" aria-labelledby="input-title">
       <h2 id="input-title" className="panel-title">
-        1만 포인트 교환권 시세 입력
+        포인트 교환권 시세 입력
       </h2>
 
-      <div className="input-row">
-        <div className="field">
-          <label htmlFor="voucherInput">
-            <span className="ico">🎫</span> 1만 포인트 교환권 <em>1장</em> 가격
-          </label>
-          <div className="input-wrap">
-            <input
-              id="voucherInput"
-              ref={inputRef}
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              value={display}
-              onChange={handleChange}
-              onFocus={(e) => e.target.select()}
-              aria-describedby="voucherHelp"
-            />
-            <span className="suffix">메소</span>
-          </div>
-          <p id="voucherHelp" className="help">
-            자유시장 시세를 입력하면 아래 모든 값이 즉시 갱신됩니다.
-          </p>
-        </div>
-
-        <div className="presets" role="group" aria-label="시세 빠른 선택">
-          {PRESETS.map((p) => (
-            <button
-              key={p.value}
-              type="button"
-              aria-pressed={voucherMeso === p.value}
-              onClick={() => onChangeDigits(String(p.value))}
+      <div className="voucher-list" role="radiogroup" aria-label="적용할 교환권 선택">
+        {rows.map((v) => {
+          const active = v.points === voucherPoints;
+          return (
+            <div
+              key={v.points}
+              className={`voucher-row${active ? ' active' : ''}`}
+              onClick={() => onSelectVoucher(v.points)}
             >
-              {p.label}
-            </button>
-          ))}
-        </div>
+              <input
+                type="radio"
+                id={`voucher-${v.points}`}
+                name="voucher"
+                checked={active}
+                onChange={() => onSelectVoucher(v.points)}
+              />
+              <label className="v-name" htmlFor={`voucher-${v.points}`}>
+                {v.label} 교환권
+              </label>
+
+              <div className="v-input" onClick={(e) => e.stopPropagation()}>
+                <MesoInput
+                  digits={prices[v.points] ?? ''}
+                  onChange={(d) => onChangePrice(v.points, d)}
+                  ariaLabel={`${v.label} 교환권 1장 가격 (메소)`}
+                  placeholder="시세 입력"
+                />
+                <span className="suffix">메소</span>
+              </div>
+
+              <div className="v-rate">
+                {v.perPoint > 0 ? (
+                  <>
+                    1P = <b>{comma(v.perPoint)}</b> 메소
+                    {best !== null && v.perPoint === best && <span className="chip">최저</span>}
+                  </>
+                ) : (
+                  <span className="muted">시세 미입력</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      {!valid && (
+        <p className="help help-warn">
+          선택한 교환권의 시세가 비어 있습니다. 시세를 입력하거나 값이 있는 교환권을 선택하세요.
+        </p>
+      )}
 
       <div className="stats">
         <Stat label="1 메이플포인트" sub="= 1.05원 고정">
@@ -80,10 +83,10 @@ export default function VoucherPanel({ digits, onChangeDigits, voucherMeso, rate
         <Stat label="1 월드코인" sub="= 7.5원 고정">
           {valid ? `${comma(rates.coinMeso)} 메소` : '—'}
         </Stat>
-        <Stat label="현금 1,000원" sub="현금 → 메소 체감가">
+        <Stat label="현금 1,000원" sub="포인트 교환권 판매가 기준">
           {valid ? `${comma(rates.krw1000Meso)} 메소` : '—'}
         </Stat>
-        <Stat label="100만 메소" sub="메소 → 현금 환산">
+        <Stat label="100만 메소" sub="포인트 교환권 판매가 기준">
           {valid ? `${krw(rates.millionMesoKrw)}원` : '—'}
         </Stat>
       </div>
