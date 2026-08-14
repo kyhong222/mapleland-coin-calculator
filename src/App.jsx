@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Header from './components/Header.jsx';
 import VoucherPanel from './components/VoucherPanel.jsx';
 import CategorySection from './components/CategorySection.jsx';
@@ -71,6 +72,7 @@ export default function App() {
 
         <ReferenceTables />
       </main>
+      <Analytics />
     </>
   );
 }
