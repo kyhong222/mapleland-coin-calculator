@@ -35,13 +35,33 @@ npm run preview  # 빌드 결과 미리보기
 교환권 3종은 각각 별도의 입력칸을 가지며, 라디오로 선택한 교환권 하나만 계산에 적용됩니다.
 각 줄에 `1P = N메소` 단가가 함께 표시되고, 단가가 서로 다르면 가장 싼 쪽에 `최저` 표시가 붙습니다.
 
-교환권 시세 660만 메소를 넣으면 첨부 표의 24개 항목 값과 정확히 일치합니다
+## 기본 시세와 저장
+
+| 교환권 | 기본 시세 | 1P |
+|---|---|---|
+| 5천 포인트 | 3,500,000 메소 | 700메소 |
+| 1만 포인트 | 7,000,000 메소 | 700메소 |
+| 3만 포인트 | 21,000,000 메소 | 700메소 |
+
+기본값은 [src/data/items.js](src/data/items.js)의 `VOUCHERS.defaultMeso` 에 있습니다.
+사용자가 값을 입력하면 `localStorage`(`ml-voucher-prices-v2`)에 저장되고 **입력값이 기본값보다 우선**합니다.
+
+저장 객체에는 **사용자가 직접 건드린 교환권만** 들어갑니다. 그래서
+
+- 값을 지워 빈칸으로 둔 것(`""`)과 한 번도 입력하지 않은 것(키 없음)이 구분되고,
+- 코드의 기본 시세를 나중에 바꾸면 사용자가 건드린 적 없는 칸에는 그대로 반영됩니다.
+
+관련 로직은 [src/lib/prices.js](src/lib/prices.js)의 `resolvePrices` / `parseSaved` 입니다.
+
+## 계산 예시
+
+교환권 시세 660만 메소(1P = 660메소)를 넣으면 첨부 표의 24개 항목 값과 정확히 일치합니다
 (예: 펫 12,000P → 7,920,000메소 / ₩12,600).
 여기에 첨부 표에 없던 `프리미엄 결혼식 티켓`(19,800P)이 소비 항목으로 추가되어 총 25종입니다.
 
-상단 지표는 반대 방향 환산도 함께 보여줍니다.
+상단 지표는 반대 방향 환산도 함께 보여줍니다 (아래는 1P = 660메소 기준).
 
-- 1 월드코인 = 시세 660만 기준 4,714메소
+- 1 월드코인 = 4,714메소
 - 현금 1,000원 = 628,571메소 (포인트 교환권 판매가 기준)
 - 100만 메소 = 1,590.9원 (포인트 교환권 판매가 기준)
 
@@ -57,6 +77,8 @@ src/
   data/items.js       환율 상수 + 캐시 아이템 목록
   lib/format.js       숫자 표기 유틸
   lib/rates.js        환율 파생 계산 (deriveRates / itemPrice)
+  lib/prices.js       기본 시세 + 저장된 입력값 병합
+  lib/icons.js        maplestory.io 아이콘 URL 생성
   lib/useLocalStorage.js
   components/
     Header.jsx          제목 + 테마 토글
@@ -65,7 +87,6 @@ src/
     CategorySection.jsx 카테고리 묶음
     ItemCard.jsx        아이템 카드 (아이콘 폴백 포함)
     ReferenceTables.jsx 월코 참고표 + 수식
-public/icons/         실제 아이템 아이콘 PNG 위치
 ```
 
 ## 아이템 추가 / 수정
@@ -73,29 +94,39 @@ public/icons/         실제 아이템 아이콘 PNG 위치
 [src/data/items.js](src/data/items.js)의 `CATEGORIES` 배열만 고치면 됩니다.
 
 ```js
-{ id: 'hair-coupon', name: '헤어 쿠폰', point: 3500, icon: null }
+{ id: 'hair-coupon', name: '헤어 쿠폰', point: 3500, itemId: null }
 // bundle: 11 은 묶음 수량 참고용 메타데이터이며 화면에는 표시되지 않습니다.
 ```
 
 ## 아이콘 지정
 
-아이콘은 **아직 지정되지 않은 상태**라 모든 아이템이 `icon: null` 이며, 카드에는 빈 아이콘 자리만
-점선으로 표시됩니다. 지정하려면 `icon` 값을 채우면 됩니다.
+아이콘은 [maplestory.io](https://maplestory.io) 에서 가져옵니다.
 
-```js
-{ id: 'pet', name: '펫', point: 12000, icon: 'pet.png' }              // public/icons/pet.png
-{ id: 'pet', name: '펫', point: 12000, icon: 'https://.../pet.png' }  // 외부 URL / data URI 도 가능
+```
+https://maplestory.io/api/{region}/{version}/item/{itemId}/icon?resize=2
+                           kms      384
 ```
 
-파일 방식이면 이미지를 `public/icons/` 에 넣으세요. 로드에 실패하면 자동으로 빈 자리로 되돌아가므로
-아이템별로 하나씩 채워 넣어도 됩니다.
+각 아이템의 `itemId` 에 maplestory.io 아이템 id 를 넣으면 그 아이콘이 표시됩니다.
+**아직 지정 전이라 전부 `null`** 이며, 이 상태에서는 카드에 빈 아이콘 자리만 점선으로 표시됩니다.
+
+```js
+{ id: 'pet', name: '펫', point: 12000, itemId: null }      // 미지정 → 빈 자리
+{ id: 'pet', name: '펫', point: 12000, itemId: 5000000 }   // 지정 → 아이콘 표시
+```
+
+- 원본 아이콘이 32px 내외로 작아서 `resize=2` 로 2배 확대해 받아옵니다
+  (픽셀 아트라 CSS `image-rendering: pixelated` 와 함께 사용)
+- 없는 id 는 API 가 404 를 주고, 그때는 자동으로 빈 자리로 되돌아갑니다
+- region / version / resize 배율은 [src/lib/icons.js](src/lib/icons.js) 상단 상수로 조정합니다
+- `kms/384` 에 없는 아이템이 생기면 그 항목에만 `iconVersion: '389'` 처럼 예외 버전을 붙일 수 있습니다
 
 ## 기타 기능
 
 - 교환권 3종(5천 / 1만 / 3만 포인트) 각각의 시세 입력 + 적용할 교환권 선택
 - 교환권별 1P 단가 비교, 최저 단가 표시
 - 카테고리(펫 · 꾸미기 · 소비)별 세로 열 배치
-- 교환권별 입력 시세·선택·테마는 `localStorage`에 저장되어 다음 방문 시 복원됩니다
+- 입력 시세·선택한 교환권·테마는 `localStorage`에 저장되어 다음 방문 시 복원됩니다
 
 ## 참고
 

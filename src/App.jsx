@@ -6,6 +6,7 @@ import ReferenceTables from './components/ReferenceTables.jsx';
 import { CATEGORIES, DEFAULT_VOUCHER_POINTS, VOUCHERS } from './data/items.js';
 import { deriveRates } from './lib/rates.js';
 import { digitsOnly } from './lib/format.js';
+import { parseSaved, resolvePrices } from './lib/prices.js';
 import { useLocalStorage } from './lib/useLocalStorage.js';
 
 const prefersDark = () =>
@@ -13,16 +14,9 @@ const prefersDark = () =>
   window.matchMedia &&
   window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-/* 교환권별 기본 시세. 교환권끼리 정비례하지 않으므로 근거 없는 칸은 비워 둠 */
-const DEFAULT_PRICES = Object.fromEntries(
-  VOUCHERS.map((v) => [v.points, v.defaultMeso === null ? '' : String(v.defaultMeso)])
-);
-
 export default function App() {
-  const [pricesRaw, setPricesRaw] = useLocalStorage(
-    'ml-voucher-prices',
-    JSON.stringify(DEFAULT_PRICES)
-  );
+  // 사용자가 실제로 입력한 교환권만 담긴다. 나머지는 items.js 의 기본 시세를 씀
+  const [pricesRaw, setPricesRaw] = useLocalStorage('ml-voucher-prices-v2', '{}');
   const [voucherPointsRaw, setVoucherPointsRaw] = useLocalStorage(
     'ml-voucher-points',
     String(DEFAULT_VOUCHER_POINTS)
@@ -38,26 +32,15 @@ export default function App() {
     ? Number(voucherPointsRaw)
     : DEFAULT_VOUCHER_POINTS;
 
-  /* 교환권별 입력값 (항상 VOUCHERS 전체 키를 갖는 숫자 문자열 맵) */
-  const prices = useMemo(() => {
-    let saved = {};
-    try {
-      const parsed = JSON.parse(pricesRaw);
-      if (parsed && typeof parsed === 'object') saved = parsed;
-    } catch {
-      /* 손상된 값은 기본값으로 */
-    }
-    return Object.fromEntries(
-      VOUCHERS.map((v) => [
-        v.points,
-        digitsOnly(saved[v.points] ?? DEFAULT_PRICES[v.points]),
-      ])
-    );
-  }, [pricesRaw]);
+  /* 저장된 입력값 (사용자가 건드린 교환권만) */
+  const savedPrices = useMemo(() => parseSaved(pricesRaw), [pricesRaw]);
+
+  /* 화면에 쓸 최종 시세: 입력값 우선, 없으면 기본 시세 */
+  const prices = useMemo(() => resolvePrices(savedPrices), [savedPrices]);
 
   /* 값을 입력한 교환권을 곧바로 적용 대상으로 삼음 */
   const handleChangePrice = (points, digits) => {
-    setPricesRaw(JSON.stringify({ ...prices, [points]: digitsOnly(digits) }));
+    setPricesRaw(JSON.stringify({ ...savedPrices, [points]: digitsOnly(digits) }));
     setVoucherPointsRaw(String(points));
   };
 
@@ -86,14 +69,7 @@ export default function App() {
           ))}
         </div>
 
-        <ReferenceTables rates={rates} valid={voucherMeso > 0} voucherPoints={voucherPoints} />
-
-        <footer className="foot">
-          <p>
-            메소 시세는 자유시장 상황에 따라 달라집니다. 원화 가치는 캐시샵 고정 환율(1P = 1.05원)
-            기준입니다.
-          </p>
-        </footer>
+        <ReferenceTables />
       </main>
     </>
   );

@@ -1,3 +1,4 @@
+import Icon from './Icon.jsx';
 import MesoInput from './MesoInput.jsx';
 import { VOUCHERS } from '../data/items.js';
 import { comma, krw } from '../lib/format.js';
@@ -41,6 +42,7 @@ export default function VoucherPanel({
                 checked={active}
                 onChange={() => onSelectVoucher(v.points)}
               />
+              <Icon itemId={v.itemId} className="icon-sm" />
               <label className="v-name" htmlFor={`voucher-${v.points}`}>
                 {v.label} 교환권
               </label>

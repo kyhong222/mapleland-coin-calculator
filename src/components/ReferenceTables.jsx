@@ -1,9 +1,7 @@
 import { MAPLE_POINT_TABLE, RATES, WORLD_COIN_TABLE } from '../data/items.js';
 import { comma } from '../lib/format.js';
 
-export default function ReferenceTables({ rates, valid, voucherPoints }) {
-  const mpp = valid ? comma(rates.mesoPerPoint) : '—';
-
+export default function ReferenceTables() {
   return (
     <section className="panel refs" aria-labelledby="ref-title">
       <h2 id="ref-title" className="panel-title">
@@ -60,23 +58,6 @@ export default function ReferenceTables({ rates, valid, voucherPoints }) {
           </table>
         </div>
 
-        <div className="ref-card formula">
-          <h3>계산 수식</h3>
-          <ul>
-            <li>
-              <b>1 월드코인</b> = 7.5원 <span className="muted">(전 구간 동일)</span>
-            </li>
-            <li>
-              <b>1 메이플포인트</b> = 700코인 × 7.5 ÷ 5,000P = <b>1.05원</b>
-            </li>
-            <li>
-              <b>1 메이플포인트</b> = 교환권 시세 ÷ {comma(voucherPoints)} = <b>{mpp}메소</b>
-            </li>
-            <li>
-              <b>아이템 메소가</b> = 아이템 포인트 × <span>{mpp}</span>
-            </li>
-          </ul>
-        </div>
       </div>
     </section>
   );
