@@ -274,12 +274,35 @@ body {
   border-radius: 12px;
   overflow: hidden;
 }
-.icon img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+/* 박스에 꽉 차지 않도록 안쪽 여백을 둔다. 1:1 이 아니게 되므로 부드럽게 축소 */
+.icon img {
+  width: 100%;
+  height: 100%;
+  padding: 7px;
+  object-fit: contain;
+}
 
 /* 아이콘 미지정 상태: 자리만 남겨둠 */
 .icon-empty {
   background: transparent;
   border-style: dashed;
+}
+
+/* 수량·기간 배지를 아이콘 우측 상단에 얹기 위한 래퍼 */
+.icon-slot { position: relative; flex: none; display: flex; }
+.unit-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--panel);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--panel);
 }
 
 /* 교환권 줄에서 쓰는 작은 아이콘. 64px 의 정확히 1/2 이라 축소해도 깨지지 않음 */

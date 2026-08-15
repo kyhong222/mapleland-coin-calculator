@@ -53,7 +53,7 @@ export const MAPLE_POINT_TABLE = [
  * 캐시 아이템 목록
  *  id     : 앱 내부 식별자
  *  point  : 캐시샵 판매가 (메이플포인트)
- *  bundle : 묶음 수량 (표시에는 쓰지 않는 참고용 메타데이터)
+ *  unit   : 수량·기간 단위(11개, 30일 등). 아이콘 우측 상단 배지로 표시
  *  itemId : maplestory.io 아이템 id. 이 값으로 아이콘을 가져옵니다.
  *             https://maplestory.io/api/kms/384/item/{itemId}/icon
  *           null 이면 빈 아이콘 자리로 표시됩니다.
@@ -75,6 +75,7 @@ export const CATEGORIES = [
     id: 'cosmetic',
     name: '꾸미기',
     items: [
+      { id: 'msw-cody-ring', name: 'MSW 코디 반지', point: 7500, unit: '30일', itemId: 1112202 },
       { id: 'hair-coupon', name: '헤어 쿠폰', point: 3500, itemId: 5150001 },
       { id: 'idol-hair-coupon', name: '아이돌 헤어 쿠폰', point: 6900, itemId: 5150038 },
       { id: 'royal-hair-coupon', name: '로얄 헤어 쿠폰', point: 7900, itemId: 5150040 },
@@ -96,16 +97,23 @@ export const CATEGORIES = [
     name: '소비',
     items: [
       { id: 'megaphone', name: '고성능 확성기', point: 750, itemId: 5072000 },
-      { id: 'megaphone-11', name: '고성능 확성기(11개)', point: 7500, bundle: 11, itemId: 5072000 },
+      { id: 'megaphone-11', name: '고성능 확성기', point: 7500, unit: '11개', itemId: 5072000 },
       { id: 'item-megaphone', name: '아이템 확성기', point: 900, itemId: 5076000 },
-      { id: 'item-megaphone-11', name: '아이템 확성기(11개)', point: 9000, bundle: 11, itemId: 5076000 },
+      { id: 'item-megaphone-11', name: '아이템 확성기', point: 9000, unit: '11개', itemId: 5076000 },
       { id: 'summon', name: '뿌리기', point: 1000, itemId: 5120004 },
-      { id: 'summon-11', name: '뿌리기(11개)', point: 10000, bundle: 11, itemId: 5120004 },
-      { id: 'safety-charm-10', name: '호신부적(10개)', point: 6000, bundle: 10, itemId: 5130000 },
+      { id: 'summon-11', name: '뿌리기', point: 10000, unit: '11개', itemId: 5120004 },
+      { id: 'safety-charm-10', name: '호신부적', point: 6000, unit: '10개', itemId: 5130000 },
       { id: 'return-scroll', name: '고성능 순간이동의 돌', point: 900, itemId: 5041000 },
+      {
+        id: 'return-scroll-10',
+        name: '고성능 순간이동의 돌',
+        point: 9000,
+        unit: '10개',
+        itemId: 5041000,
+      },
       { id: 'ap-reset', name: 'AP초기화', point: 12000, itemId: 5050100 },
       { id: 'sp-reset', name: 'SP초기화', point: 9750, itemId: 5051001 },
-      { id: 'slot-expand', name: '선택슬롯', point: 3750, itemId: 5530910 },
+      { id: 'slot-expand', name: '선택 슬롯 4칸 확장권', point: 3750, itemId: 3801189 },
       { id: 'premium-wedding-ticket', name: '프리미엄 결혼식 티켓', point: 19800, itemId: 5251006 },
     ],
   },
