@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import FeedbackDialog from './FeedbackDialog.jsx';
+
 /* 테마 토글용 인라인 SVG (해/달) */
 function ThemeIcon({ dark }) {
   return dark ? (
@@ -16,19 +19,33 @@ function ThemeIcon({ dark }) {
 
 export default function Header({ theme, onToggleTheme }) {
   const dark = theme === 'dark';
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
   return (
-    <header className="topbar">
-      <div className="wrap topbar-inner">
-        <h1>메이플랜드 월드코인-메소 환전 계산기</h1>
-        <button
-          type="button"
-          className="ghost-btn"
-          onClick={onToggleTheme}
-          aria-label={dark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-        >
-          <ThemeIcon dark={dark} />
-        </button>
-      </div>
-    </header>
+    <>
+      <header className="topbar">
+        <div className="wrap topbar-inner">
+          <h1>메이플랜드 월드코인-메소 환전 계산기</h1>
+          <div className="topbar-actions">
+            <button
+              type="button"
+              className="ghost-btn ghost-btn-text"
+              onClick={() => setFeedbackOpen(true)}
+            >
+              문의하기
+            </button>
+            <button
+              type="button"
+              className="ghost-btn"
+              onClick={onToggleTheme}
+              aria-label={dark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            >
+              <ThemeIcon dark={dark} />
+            </button>
+          </div>
+        </div>
+      </header>
+      <FeedbackDialog open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+    </>
   );
 }
