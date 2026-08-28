@@ -351,7 +351,18 @@ body {
   font-variant-numeric: tabular-nums;
   letter-spacing: -.02em;
 }
-.price-meso .unit { font-size: 12px; font-weight: 700; margin-left: 4px; }
+/* 메소 단위를 대신하는 동전 아이콘. em 이라 감싼 글자 크기를 따라간다.
+   원본(26x28)은 아래 4줄이 그림자라 떠 보인다. 폭을 1.05em 으로 맞추면
+   전체 높이가 1.05 x 28/26 = 1.131em 이고, 동전 본체 24/28 만 남기면
+   1.131 x 24/28 = 0.969em. 딱 그림자 직전까지만 보여준다. */
+.meso-icon {
+  width: 1.05em;
+  height: 0.969em;
+  margin-right: 4px;
+  object-fit: cover;
+  object-position: top;
+  vertical-align: -0.13em;
+}
 
 /* 묶음·기간제 상품의 단위당 단가. 메인 금액보다 작고 흐리게 */
 .price-meso .per-unit {

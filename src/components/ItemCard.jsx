@@ -1,4 +1,5 @@
 import Icon from './Icon.jsx';
+import MesoIcon from './MesoIcon.jsx';
 import { comma, krw } from '../lib/format.js';
 import { itemPrice } from '../lib/rates.js';
 
@@ -24,11 +25,12 @@ export default function ItemCard({ item, mesoPerPoint, valid }) {
         </div>
         <div className="card-price">
           <div className="price-meso">
+            <MesoIcon />
             {valid ? comma(meso) : '—'}
-            <span className="unit">메소</span>
             {unitLabel && (
               <span className="per-unit">
-                ({unitLabel} {valid ? comma(perUnitMeso) : '—'} 메소)
+                ({unitLabel} <MesoIcon />
+                {valid ? comma(perUnitMeso) : '—'})
               </span>
             )}
           </div>

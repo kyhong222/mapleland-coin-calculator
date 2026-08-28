@@ -1,4 +1,5 @@
 import Icon from './Icon.jsx';
+import MesoIcon from './MesoIcon.jsx';
 import MesoInput from './MesoInput.jsx';
 import { VOUCHERS } from '../data/items.js';
 import { comma, krw } from '../lib/format.js';
@@ -60,7 +61,8 @@ export default function VoucherPanel({
               <div className="v-rate">
                 {v.perPoint > 0 ? (
                   <>
-                    1P = <b>{comma(v.perPoint)}</b> 메소
+                    1P = <MesoIcon />
+                    <b>{comma(v.perPoint)}</b>
                     {best !== null && v.perPoint === best && <span className="chip">최저</span>}
                   </>
                 ) : (
@@ -80,13 +82,13 @@ export default function VoucherPanel({
 
       <div className="stats">
         <Stat label="1 메이플포인트" sub="= 1.05원 고정">
-          {valid ? `${comma(rates.mesoPerPoint)} 메소` : '—'}
+          {valid ? <><MesoIcon />{comma(rates.mesoPerPoint)}</> : '—'}
         </Stat>
         <Stat label="1 월드코인" sub="= 7.5원 고정">
-          {valid ? `${comma(rates.coinMeso)} 메소` : '—'}
+          {valid ? <><MesoIcon />{comma(rates.coinMeso)}</> : '—'}
         </Stat>
         <Stat label="현금 1,000원" sub="포인트 교환권 판매가 기준">
-          {valid ? `${comma(rates.krw1000Meso)} 메소` : '—'}
+          {valid ? <><MesoIcon />{comma(rates.krw1000Meso)}</> : '—'}
         </Stat>
         <Stat label="100만 메소" sub="포인트 교환권 판매가 기준">
           {valid ? `${krw(rates.millionMesoKrw)}원` : '—'}
