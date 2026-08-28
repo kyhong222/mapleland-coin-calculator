@@ -1,4 +1,5 @@
 import Icon from './Icon.jsx';
+import MesoIcon from './MesoIcon.jsx';
 import { comma, krw } from '../lib/format.js';
 import { itemPrice } from '../lib/rates.js';
 
@@ -6,7 +7,7 @@ import { itemPrice } from '../lib/rates.js';
 export const itemLabel = (item) => (item.unit ? `${item.name}(${item.unit})` : item.name);
 
 export default function ItemCard({ item, mesoPerPoint, valid }) {
-  const { meso, krw: won } = itemPrice(item, mesoPerPoint);
+  const { meso, krw: won, unitLabel, perUnitMeso, perUnitKrw } = itemPrice(item, mesoPerPoint);
   const label = itemLabel(item);
 
   return (
@@ -24,10 +25,19 @@ export default function ItemCard({ item, mesoPerPoint, valid }) {
         </div>
         <div className="card-price">
           <div className="price-meso">
+            <MesoIcon />
             {valid ? comma(meso) : '—'}
-            <span className="unit">메소</span>
+            {unitLabel && (
+              <span className="per-unit">
+                ({unitLabel} <MesoIcon />
+                {valid ? comma(perUnitMeso) : '—'})
+              </span>
+            )}
           </div>
-          <div className="price-sub">₩ {krw(won)}</div>
+          <div className="price-sub">
+            ₩ {krw(won)}
+            {unitLabel && <span> ({unitLabel} ₩{krw(perUnitKrw)})</span>}
+          </div>
         </div>
       </div>
     </article>
