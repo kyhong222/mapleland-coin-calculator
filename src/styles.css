@@ -319,13 +319,14 @@ body {
   box-shadow: 0 0 0 2px var(--panel);
 }
 
-/* 교환권 줄에서 쓰는 작은 아이콘 */
+/* 교환권 줄 아이콘. 줄 높이(약 68px)에 맞춰 카드보다 조금 작게 */
 .icon-sm {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   background: var(--panel);
 }
+.icon-sm img { padding: 5px; }
 .card-name {
   font-weight: 700;
   font-size: 15px;
