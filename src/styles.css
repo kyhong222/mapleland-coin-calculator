@@ -277,7 +277,7 @@ body {
   border-top: 1px dashed var(--line);
 }
 
-/* resize=2 응답(64px 내외)과 1:1 로 그리기 위해 64px 고정 */
+/* 아이콘 박스. 받아온 이미지(4배, 100px 이상)를 축소해 그린다 */
 .icon {
   width: 64px; height: 64px;
   flex: none;
@@ -319,7 +319,7 @@ body {
   box-shadow: 0 0 0 2px var(--panel);
 }
 
-/* 교환권 줄에서 쓰는 작은 아이콘. 64px 의 정확히 1/2 이라 축소해도 깨지지 않음 */
+/* 교환권 줄에서 쓰는 작은 아이콘 */
 .icon-sm {
   width: 32px;
   height: 32px;
