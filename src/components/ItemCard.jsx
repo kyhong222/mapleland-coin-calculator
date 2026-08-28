@@ -6,7 +6,7 @@ import { itemPrice } from '../lib/rates.js';
 export const itemLabel = (item) => (item.unit ? `${item.name}(${item.unit})` : item.name);
 
 export default function ItemCard({ item, mesoPerPoint, valid }) {
-  const { meso, krw: won } = itemPrice(item, mesoPerPoint);
+  const { meso, krw: won, unitLabel, perUnitMeso, perUnitKrw } = itemPrice(item, mesoPerPoint);
   const label = itemLabel(item);
 
   return (
@@ -26,8 +26,16 @@ export default function ItemCard({ item, mesoPerPoint, valid }) {
           <div className="price-meso">
             {valid ? comma(meso) : '—'}
             <span className="unit">메소</span>
+            {unitLabel && (
+              <span className="per-unit">
+                ({unitLabel} {valid ? comma(perUnitMeso) : '—'} 메소)
+              </span>
+            )}
           </div>
-          <div className="price-sub">₩ {krw(won)}</div>
+          <div className="price-sub">
+            ₩ {krw(won)}
+            {unitLabel && <span> ({unitLabel} ₩{krw(perUnitKrw)})</span>}
+          </div>
         </div>
       </div>
     </article>

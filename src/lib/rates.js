@@ -22,10 +22,37 @@ export function deriveRates(voucherMeso, voucherPoints) {
   };
 }
 
-/** 아이템 1개(묶음이면 묶음 전체)의 메소가 / 원화가 */
+/**
+ * 단위 문자열을 나눗셈에 쓸 수 있게 분해합니다.
+ *
+ *   '11개' → { count: 11, label: '1개당' }   묶음 상품 → 개당 단가
+ *   '30일' → { count: 30, label: '1일당' }   기간제 상품 → 하루당 단가
+ *
+ * 단위가 없거나 수량이 1이면(나눌 의미가 없으면) null 을 돌려줍니다.
+ */
+export function parseUnit(unit) {
+  const m = typeof unit === 'string' ? unit.trim().match(/^(\d+)\s*(개|일)$/) : null;
+  if (!m) return null;
+  const count = Number(m[1]);
+  if (!Number.isFinite(count) || count <= 1) return null;
+  return { count, label: `1${m[2]}당` };
+}
+
+/**
+ * 아이템 1개(묶음이면 묶음 전체)의 메소가 / 원화가.
+ * 묶음·기간제 상품은 단위당 단가도 함께 돌려줍니다.
+ */
 export function itemPrice(item, mesoPerPoint) {
+  const meso = item.point * mesoPerPoint;
+  const krw = item.point * RATES.POINT_TO_KRW;
+  const unit = parseUnit(item.unit);
+
   return {
-    meso: item.point * mesoPerPoint,
-    krw: item.point * RATES.POINT_TO_KRW,
+    meso,
+    krw,
+    /** '1개당' / '1일당' — 단위가 없으면 null */
+    unitLabel: unit ? unit.label : null,
+    perUnitMeso: unit ? meso / unit.count : null,
+    perUnitKrw: unit ? krw / unit.count : null,
   };
 }

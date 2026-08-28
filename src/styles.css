@@ -346,13 +346,22 @@ body {
 .price-meso {
   font-size: 20px;
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.3;
   color: var(--meso);
   font-variant-numeric: tabular-nums;
   letter-spacing: -.02em;
-  white-space: nowrap;
 }
 .price-meso .unit { font-size: 12px; font-weight: 700; margin-left: 4px; }
+
+/* 묶음·기간제 상품의 단위당 단가. 메인 금액보다 작고 흐리게 */
+.price-meso .per-unit {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0;
+}
 
 /* 메소가에 딸린 보조 표기 (현금가) */
 .price-sub {
