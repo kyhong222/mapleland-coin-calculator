@@ -57,17 +57,22 @@ npm run preview  # 빌드 결과 미리보기
 
 교환권 시세 660만 메소(1P = 660메소)를 넣으면 첨부 표의 24개 항목 값과 정확히 일치합니다
 (예: 펫 12,000P → 7,920,000메소 / ₩12,600).
-여기에 첨부 표에 없던 아래 항목이 추가되어 총 28종입니다.
+여기에 첨부 표에 없던 아래 항목이 추가되어 총 32종입니다.
 
 | 항목 | 포인트 | 분류 |
 |---|---|---|
 | 프리미엄 결혼식 티켓 | 19,800P | 소비 |
 | 스페셜 로얄 헤어 쿠폰 | 7,900P | 꾸미기 |
 | MSW 코디 반지(30일) | 7,500P | 꾸미기 |
-| 고성능 순간이동의 돌(10개) | 9,000P | 소비 |
+| MSW 코디 반지(90일) | 20,250P | 꾸미기 |
+| 고성능 순간이동의 돌(5개) | 4,500P | 소비 |
+| 고성능 순간이동의 돌(11개) | 9,900P | 소비 |
+| 보따리상인 묘묘 | 300P | 소비 |
+| 보따리상인 묘묘(11개) | 3,000P | 소비 |
 
 수량·기간 단위가 있는 항목은 `unit` 필드에 적으면 아이콘 우측 상단 배지와 상품명 뒤
-괄호에 함께 표시됩니다 (예: `unit: '10개'` → `고성능 순간이동의 돌(10개)`).
+괄호에 함께 표시됩니다 (예: `unit: '11개'` → `고성능 순간이동의 돌(11개)`).
+낱개와 묶음이 같은 아이템이면 `itemId`를 똑같이 두면 됩니다.
 
 상단 지표는 반대 방향 환산도 함께 보여줍니다 (아래는 1P = 660메소 기준).
 
@@ -91,12 +96,17 @@ src/
   lib/icons.js        maplestory.io 아이콘 URL 생성
   lib/useLocalStorage.js
   components/
-    Header.jsx          제목 + 테마 토글
+    Header.jsx          제목 + 문의하기 + 테마 토글
+    FeedbackDialog.jsx  문의하기 모달 (GitHub 이슈 등록)
     VoucherPanel.jsx    교환권 3종 시세 입력 + 적용 선택 + 지표 4종
     MesoInput.jsx       콤마 자동 삽입 메소 입력창
     CategorySection.jsx 카테고리 묶음
-    ItemCard.jsx        아이템 카드 (아이콘 폴백 포함)
-    ReferenceTables.jsx 월코 참고표 + 수식
+    ItemCard.jsx        아이템 카드 (이름·포인트 / 메소 · 원화)
+    Icon.jsx            maplestory.io 아이콘 (실패 시 빈 자리)
+    ReferenceTables.jsx 월코 참고표
+api/feedback.js       문의 → GitHub 이슈 서버리스 프록시
+docs/feedback-setup.md  문의하기 토큰·환경변수 설정 가이드
+public/msicon.png     파비콘
 ```
 
 ## 아이템 추가 / 수정
@@ -104,8 +114,8 @@ src/
 [src/data/items.js](src/data/items.js)의 `CATEGORIES` 배열만 고치면 됩니다.
 
 ```js
-{ id: 'hair-coupon', name: '헤어 쿠폰', point: 3500, itemId: null }
-// bundle: 11 은 묶음 수량 참고용 메타데이터이며 화면에는 표시되지 않습니다.
+{ id: 'hair-coupon', name: '헤어 쿠폰', point: 3500, itemId: 5150001 }
+// unit: '11개' 를 넣으면 아이콘 배지와 상품명 뒤 괄호에 함께 표시됩니다.
 ```
 
 ## 아이콘 지정
@@ -118,15 +128,16 @@ https://maplestory.io/api/{region}/{version}/item/{itemId}/icon?resize=2
 ```
 
 각 아이템의 `itemId` 에 maplestory.io 아이템 id 를 넣으면 그 아이콘이 표시됩니다.
-**아직 지정 전이라 전부 `null`** 이며, 이 상태에서는 카드에 빈 아이콘 자리만 점선으로 표시됩니다.
+현재는 모든 항목에 id 가 지정돼 있고, `null` 이거나 이미지를 못 받아오면 빈 아이콘 자리만
+점선으로 표시됩니다.
 
 ```js
+{ id: 'pet', name: '펫', point: 12000, itemId: 5000001 }   // 지정 → 아이콘 표시
 { id: 'pet', name: '펫', point: 12000, itemId: null }      // 미지정 → 빈 자리
-{ id: 'pet', name: '펫', point: 12000, itemId: 5000000 }   // 지정 → 아이콘 표시
 ```
 
-- 원본 아이콘이 32px 내외로 작아서 `resize=2` 로 2배 확대해 받아옵니다
-  (픽셀 아트라 CSS `image-rendering: pixelated` 와 함께 사용)
+- 원본 아이콘이 32px 내외로 작아서 `resize=2` 로 2배 확대해 받아옵니다.
+  64px 아이콘 박스 안에서 7px 여백을 두고 부드럽게 축소해 그립니다
 - 없는 id 는 API 가 404 를 주고, 그때는 자동으로 빈 자리로 되돌아갑니다
 - region / version / resize 배율은 [src/lib/icons.js](src/lib/icons.js) 상단 상수로 조정합니다
 - `kms/384` 에 없는 아이템이 생기면 그 항목에만 `iconVersion: '389'` 처럼 예외 버전을 붙일 수 있습니다
@@ -137,6 +148,7 @@ https://maplestory.io/api/{region}/{version}/item/{itemId}/icon?resize=2
 - 교환권별 1P 단가 비교, 최저 단가 표시
 - 카테고리(펫 · 꾸미기 · 소비)별 세로 열 배치
 - 입력 시세·선택한 교환권·테마는 `localStorage`에 저장되어 다음 방문 시 복원됩니다
+- 문의하기 (상품 추가 요청·건의 → GitHub 이슈로 등록, [설정 가이드](docs/feedback-setup.md))
 
 ## 참고
 
