@@ -69,6 +69,7 @@ export const CATEGORIES = [
       { id: 'creature', name: '생명의 물', point: 4500, itemId: 5180000 },
       { id: 'premium-creature', name: '프리미엄 생명의 물', point: 14500, itemId: 5689000 },
       { id: 'pet-skill', name: '펫 버프 자동스킬', point: 9000, itemId: 5190010 },
+      { id: 'pet-name-tag', name: '펫작명하기', point: 1500, itemId: 5170000 },
     ],
   },
   {
@@ -101,8 +102,12 @@ export const CATEGORIES = [
       { id: 'megaphone-11', name: '고성능 확성기', point: 7500, unit: '11개', itemId: 5072000 },
       { id: 'item-megaphone', name: '아이템 확성기', point: 900, itemId: 5076000 },
       { id: 'item-megaphone-11', name: '아이템 확성기', point: 9000, unit: '11개', itemId: 5076000 },
+      { id: 'triple-megaphone', name: '세줄 확성기', point: 2100, itemId: 5077000 },
+      { id: 'triple-megaphone-11', name: '세줄 확성기', point: 21000, unit: '11개', itemId: 5077000 },
       { id: 'summon', name: '뿌리기', point: 1000, itemId: 5120004 },
       { id: 'summon-11', name: '뿌리기', point: 10000, unit: '11개', itemId: 5120004 },
+      { id: 'blackboard-1', name: '칠판', point: 500, unit: '1일', itemId: 5370001 },
+      { id: 'blackboard-7', name: '칠판', point: 3000, unit: '7일', itemId: 5370001 },
       { id: 'safety-charm-10', name: '호신부적', point: 6000, unit: '10개', itemId: 5130000 },
       { id: 'return-scroll', name: '고성능 순간이동의 돌', point: 900, itemId: 5041000 },
       {
