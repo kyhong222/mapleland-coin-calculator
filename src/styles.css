@@ -40,7 +40,8 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+/* 카테고리 4열(300px×4 + 간격 20px×3 = 1260px)이 한 줄에 들어가는 폭 */
+.wrap { max-width: 1480px; margin: 0 auto; padding: 0 20px; }
 
 /* ── 상단바 ── */
 .topbar {
@@ -145,7 +146,8 @@ body {
   cursor: pointer;
 }
 
-.v-input { position: relative; display: flex; align-items: center; flex: 1 1 200px; }
+/* 넓은 화면에서 입력칸만 과하게 늘어나지 않도록 상한을 둔다 */
+.v-input { position: relative; display: flex; align-items: center; flex: 1 1 200px; max-width: 460px; }
 .v-input input {
   width: 100%;
   font-size: 22px;
@@ -174,6 +176,7 @@ body {
 
 .v-rate {
   flex: 0 0 176px;
+  margin-left: auto;
   text-align: right;
   font-size: 13px;
   color: var(--muted);
@@ -488,7 +491,8 @@ textarea.field-control { resize: vertical; line-height: 1.6; }
 .refs { margin-top: 30px; }
 .ref-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* 넓은 화면에서 표가 필요 이상으로 벌어지지 않도록 열 너비에 상한을 둔다 */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 520px));
   gap: 16px;
 }
 .ref-card {
@@ -516,7 +520,7 @@ textarea.field-control { resize: vertical; line-height: 1.6; }
   .voucher-row { flex-wrap: wrap; gap: 10px 12px; }
   .v-name { flex: 1 1 auto; }
   .v-rate { flex: 0 0 auto; order: 2; margin-left: auto; }
-  .v-input { flex: 1 1 100%; order: 3; }
+  .v-input { flex: 1 1 100%; max-width: none; order: 3; }
   .v-input input { font-size: 20px; }
 }
 
