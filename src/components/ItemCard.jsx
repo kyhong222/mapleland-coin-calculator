@@ -13,7 +13,7 @@ export default function ItemCard({ item, mesoPerPoint, valid }) {
   return (
     <article className="card">
       <div className="icon-slot">
-        <Icon itemId={item.itemId} version={item.iconVersion} />
+        <Icon itemId={item.itemId} version={item.iconVersion} scale={item.iconScale} />
         {item.unit && <span className="unit-badge">{item.unit}</span>}
       </div>
       <div className="card-body">

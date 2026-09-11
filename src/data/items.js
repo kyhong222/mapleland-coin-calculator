@@ -58,6 +58,9 @@ export const MAPLE_POINT_TABLE = [
  *             https://maplestory.io/api/kms/384/item/{itemId}/icon
  *           null 이면 빈 아이콘 자리로 표시됩니다.
  *  iconVersion : 기본 버전(kms/384)에 없는 아이템이 생겼을 때만 쓰는 예외 버전
+ *  iconScale   : 원본 그림이 투명 여백에 비해 작아 혼자 작게 보이는 아이템만 쓰는 배율.
+ *                기본(여백 7px) 대비 배율이 아니라 아이콘 박스 64px 기준이라
+ *                1.0 만 줘도 이미 평소보다 약 1.3배로 그려집니다.
  */
 export const CATEGORIES = [
   {
@@ -102,8 +105,15 @@ export const CATEGORIES = [
       { id: 'megaphone-11', name: '고성능 확성기', point: 7500, unit: '11개', itemId: 5072000 },
       { id: 'item-megaphone', name: '아이템 확성기', point: 900, itemId: 5076000 },
       { id: 'item-megaphone-11', name: '아이템 확성기', point: 9000, unit: '11개', itemId: 5076000 },
-      { id: 'triple-megaphone', name: '세줄 확성기', point: 2100, itemId: 5077000 },
-      { id: 'triple-megaphone-11', name: '세줄 확성기', point: 21000, unit: '11개', itemId: 5077000 },
+      { id: 'triple-megaphone', name: '세줄 확성기', point: 2100, itemId: 5077000, iconScale: 1.3 },
+      {
+        id: 'triple-megaphone-11',
+        name: '세줄 확성기',
+        point: 21000,
+        unit: '11개',
+        itemId: 5077000,
+        iconScale: 1.3,
+      },
       { id: 'summon', name: '뿌리기', point: 1000, itemId: 5120004 },
       { id: 'summon-11', name: '뿌리기', point: 10000, unit: '11개', itemId: 5120004 },
       { id: 'blackboard-1', name: '칠판', point: 500, unit: '1일', itemId: 5370001 },
