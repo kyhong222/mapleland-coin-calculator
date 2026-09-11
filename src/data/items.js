@@ -98,8 +98,8 @@ export const CATEGORIES = [
     ],
   },
   {
-    id: 'consume',
-    name: '소비',
+    id: 'message',
+    name: '메시지',
     items: [
       { id: 'megaphone', name: '고성능 확성기', point: 750, itemId: 5072000 },
       { id: 'megaphone-11', name: '고성능 확성기', point: 7500, unit: '11개', itemId: 5072000 },
@@ -118,6 +118,12 @@ export const CATEGORIES = [
       { id: 'summon-11', name: '뿌리기', point: 10000, unit: '11개', itemId: 5120004 },
       { id: 'blackboard-1', name: '칠판', point: 500, unit: '1일', itemId: 5370001 },
       { id: 'blackboard-7', name: '칠판', point: 3000, unit: '7일', itemId: 5370001 },
+    ],
+  },
+  {
+    id: 'consume',
+    name: '소비',
+    items: [
       { id: 'safety-charm-10', name: '호신부적', point: 6000, unit: '10개', itemId: 5130000 },
       { id: 'return-scroll', name: '고성능 순간이동의 돌', point: 900, itemId: 5041000 },
       {
