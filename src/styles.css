@@ -330,6 +330,19 @@ body {
   background: var(--panel);
 }
 .icon-sm img { padding: 5px; }
+
+/* 글줄 안에 끼우는 아이콘. 박스·여백을 지우고 감싼 글자 크기를 따라가게 둔다 */
+.icon-inline {
+  display: inline-grid;
+  width: 1.6em;
+  height: 1.6em;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  vertical-align: -0.5em;
+}
+.icon-inline img { padding: 0; }
+
 .card-name {
   font-weight: 700;
   font-size: 15px;
