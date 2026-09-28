@@ -21,6 +21,17 @@ export default function VoucherPanel({
   const rated = rows.filter((r) => r.perPoint > 0).map((r) => r.perPoint);
   const best = rated.length > 1 && new Set(rated).size > 1 ? Math.min(...rated) : null;
 
+  // 환산 기준이 되는 교환권. 어떤 교환권 시세로 계산한 값인지 지표 설명줄에 그대로 보여준다
+  const selected = rows.find((r) => r.points === voucherPoints);
+  const basis = selected ? (
+    <>
+      <Icon itemId={selected.itemId} className="icon-inline" />{' '}
+      {selected.label} 교환권 판매가 기준
+    </>
+  ) : (
+    '포인트 교환권 판매가 기준'
+  );
+
   return (
     <section className="panel" aria-labelledby="input-title">
       <h2 id="input-title" className="panel-title">
@@ -87,10 +98,10 @@ export default function VoucherPanel({
         <Stat label="1 월드코인" sub="= 7.5원 고정">
           {valid ? <><MesoIcon />{comma(rates.coinMeso)}</> : '—'}
         </Stat>
-        <Stat label="현금 1,000원" sub="포인트 교환권 판매가 기준">
+        <Stat label="현금 1,000원" sub={basis}>
           {valid ? <><MesoIcon />{comma(rates.krw1000Meso)}</> : '—'}
         </Stat>
-        <Stat label="100만 메소" sub="포인트 교환권 판매가 기준">
+        <Stat label="100만 메소" sub={basis}>
           {valid ? `${krw(rates.millionMesoKrw)}원` : '—'}
         </Stat>
       </div>
